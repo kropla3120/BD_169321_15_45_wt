@@ -1,0 +1,82 @@
+1.
+create table postac( id_postaci int not null auto_increment, nazwa varchar(40), rodzaj enum("wiking","ptak","kobieta"), data_ur date, wiek int check(wiek>0), PRIMARY KEY (id_postaci) );
+
+insert into postac(nazwa, rodzaj, data_ur, wiek) values('Bjorn', 'wiking', '1998-06-20', 24);
+
+insert into postac(nazwa, rodzaj, data_ur, wiek) values('Drozd', 'ptak', '2020-05-21', 2);
+
+insert into postac(nazwa, rodzaj, data_ur, wiek) values('Tesciowa', 'kobieta', '1970-01-10', 52);
+
+update postac set data_ur = '1934-01-10', wiek = 88 where id_postaci = 3;
+
+
+
+2.
+create table walizka( id_walizki int not null auto_increment, pojemnosc int check(pojemnosc>0), kolor enum("rozowy","czerwony","teczowy", "zolty"),id_wlasciciela int not null, PRIMARY KEY (id_walizki), foreign key (id_wlasciciela) references postac(id_postaci) on delete cascade );
+
+alter table walizka modify column kolor enum('rozowy','czerwony','teczowy','zolty') default "rozowy";
+
+insert into walizka(pojemnosc, kolor, id_wlasciciela) values(20, 'czerwony', 1);
+
+insert into walizka(pojemnosc, id_wlasciciela) values(20, 3);
+
+
+3.
+create table izba( adres_budynku varchar(50), nazwa_izby varchar(50), metraz int check(metraz>0), wlasciciel int, foreign key (wlasciciel) references postac(id_postaci) on delete set null, p );
+
+alter table izba add kolor_izby varchar(20) default "czarny";
+
+insert into izba (adres_budynku, nazwa_izby, metraz, wlasciciel) values ("za gorami", "spizarnia", 20, 1);
+
+
+
+
+4.
+create table przetwory( id_przetworu int not null auto_increment, rok_produkcji int default(1654), id_wykonawcy int not null, zawartosc varchar(40), dodatek varchar(40) default "papryczka chilli", id_konsumenta int, primary key (id_przetworu), foreign key (id_wykonawcy) references postac(id_postaci), foreign key (id_konsumenta) references postac(id_postaci) );
+
+insert into przetwory(zawartosc, id_wykonawcy, id_konsumenta) values('bigos', 1, 1);
+
+
+5.
+
+insert into postac (nazwa, rodzaj, data_ur, wiek) values ("Hjalmar", "wiking", "1000-08-20", 23);
+insert into postac (nazwa, rodzaj, data_ur, wiek) values ("Sven", "wiking", "1001-08-20", 22)
+insert into postac (nazwa, rodzaj, data_ur, wiek) values ("Erik", "wiking", "1002-08-20", 21);
+insert into postac (nazwa, rodzaj, data_ur, wiek) values ("Halvard", "wiking", "999-08-20", 24);
+insert into postac (nazwa, rodzaj, data_ur, wiek) values ("Bjorg", "wiking", "1003-08-20", 20);
+
+create table statek ( nazwa_statku varchar(40), rodzaj_statku enum('maly', 'sredni', 'duzy'), data_wodowania date, max_ladownosc int check(max_ladownosc>0), primary key (nazwa_statku) );
+
+insert into statek (nazwa_statku, rodzaj_statku, data_wodowania, max_ladownosc) values ("pierwszy", "duzy", "1000-07-10", 20);
+insert into statek (nazwa_statku, rodzaj_statku, data_wodowania, max_ladownosc) values ("drugi",
+"maly", "1000-06-10", 20);
+
+alter table postac add funkcja varchar(40);
+
+update postac set funkcja = "kapitan" where id_postaci = 1;
+
+alter table postac add statek varchar(40);
+
+alter table postac add foreign key (statek) references statek(nazwa_statku);
+
+update postac set statek = "pierwszy" where id_postaci != 3;
+
+delete from izba where nazwa_izby = "spizarnia";
+
+drop table izba;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
