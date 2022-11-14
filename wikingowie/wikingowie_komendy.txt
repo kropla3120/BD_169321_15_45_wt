@@ -22,7 +22,7 @@ insert into walizka(pojemnosc, id_wlasciciela) values(20, 3);
 
 
 3.
-create table izba( adres_budynku varchar(50), nazwa_izby varchar(50), metraz int check(metraz>0), wlasciciel int, foreign key (wlasciciel) references postac(id_postaci) on delete set null, p );
+create table izba( adres_budynku varchar(50), nazwa_izby varchar(50), metraz int check(metraz>0), wlasciciel int, foreign key (wlasciciel) references postac(id_postaci) on delete set null, primary key (adres_budynku, nazwa_izby) );
 
 alter table izba add kolor_izby varchar(20) default "czarny";
 
