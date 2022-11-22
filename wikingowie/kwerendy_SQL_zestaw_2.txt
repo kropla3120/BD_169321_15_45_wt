@@ -1,0 +1,53 @@
+1.
+delete from postac where rodzaj="wiking" and id_postaci!=1 order by wiek desc limit 2;
+
+alter table przetwory drop constraint przetwory_ibfk_1;
+alter table przetwory drop constraint przetwory_ibfk_2;
+alter table walizka drop constraint walizka_ibfk_1;
+
+alter table postac modify id_postaci INT NOT NULL;
+
+alter table postac drop primary key;
+
+2.
+alter table postac add pesel varchar(11) not null;
+update postac set pesel = FLOOR(RAND()*100000000000);
+alter table postac modify pesel varchar(11) not null unique;
+alter table postac add primary key (pesel);
+
+alter table postac modify rodzaj enum("wiking", "ptak", "kobieta", "syrena");
+
+insert into postac(nazwa, rodzaj, pesel, wiek, id_postaci)
+values ("Gertruda Nieszczera", "syrena", FLOOR(RAND()*100000000000), 20, 9);
+
+
+3.
+update postac set statek="pierwszy" where postac.nazwa like "%a%";
+update statek set max_ladownosc = max_ladownosc - max_ladownosc*0.3 where data_wodowania like "19%";
+alter table postac add constraint check(wiek<1000);
+
+4.
+insert into postac(nazwa, pesel, id_postaci) values ("Loko", FLOOR(RAND()*100000000000), 10);
+insert into Marynarz select * from postac where statek is not NULL;
+
+5.
+update postac set statek = NULL;
+
+delete from postac where id_postaci = 8;
+
+delete from statek;
+
+alter table postac drop constraint postac_ibfk_1;
+drop table statek;
+
+create table zwierz ( id int auto_increment, nazwa varchar(50), wiek int, primary key (id) );
+
+insert into zwierz (nazwa, wiek) select nazwa, wiek from postac where rodzaj != 'wiking' and rodzaj != 'kobieta' or rodzaj is NULL;
+
+
+
+
+
+
+
+
