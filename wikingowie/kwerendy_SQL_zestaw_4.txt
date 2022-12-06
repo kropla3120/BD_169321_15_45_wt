@@ -1,0 +1,42 @@
+1.
+select avg(waga) as srednia_waga from kreatura where rodzaj="wiking";
+
+select avg(waga) as srednia_waga, rodzaj, count(rodzaj) as liczba_kreatur from kreatura group by rodzaj;
+
+select avg(1700 - year(dataUr)) as wiek, rodzaj from kreatura group by rodzaj;
+
+2.
+select sum(waga) as suma_wag, rodzaj from zasob group by rodzaj;
+
+select avg(waga) as srednia_waga, nazwa from zasob where ilosc >=4 group
+by nazwa having srednia_waga > 10;
+
+select count(nazwa) as ilosc, rodzaj from zasob group by rodzaj having ilosc > 1;
+
+3.
+select nazwa, sum(ekwipunek.ilosc) as ilosc_zasobow from kreatura join 
+ekwipunek on kreatura.idKreatury = ekwipunek.idKreatury group by kreatura.idKreatury;
+
+select kreatura.nazwa, group_concat(zasob.nazwa separator ',') as zasoby
+from kreatura join ekwipunek on kreatura.idKreatury = ekwipunek.idKreatury join
+zasob on ekwipunek.idZasobu = zasob.idZasobu group by kreatura.idKreatury;
+
+select kreatura.nazwa from kreatura left join ekwipunek on kreatura.idKreatury = ekwipunek.idKreatury
+where idEkwipunku is null group by kreatura.idKreatury;
+
+4.
+select kreatura.nazwa, group_concat(zasob.nazwa separator ',') from kreatura natural join ekwipunek
+join zasob on ekwipunek.idZasobu = zasob.idZasobu where year(kreatura.dataUr) like "167%"  group by kreatura.idKreatury;
+
+select kreatura.nazwa from kreatura natural join ekwipunek join zasob on ekwipunek.idZasobu = zasob.idZasobu 
+where zasob.rodzaj = "jedzenie" order by kreatura.dataUr desc limit 5;
+
+SELECT a.nazwa, b.nazwa FROM kreatura a INNER join kreatura b ON (a.idKreatury - b.idKreatury) = 5;
+
+5.
+select kreatura.rodzaj, avg(zasob.waga) as srednia_waga from kreatura natural join ekwipunek join zasob on ekwipunek.idZasobu = zasob.idZasobu 
+group by kreatura.rodzaj having kreatura.rodzaj not in("malpa", "waz") and sum(ekwipunek.ilosc)<30;
+
+
+
+
