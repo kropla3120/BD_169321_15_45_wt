@@ -1,0 +1,21 @@
+1.
+create table uczestnicy as select * from wikingowie.uczestnicy;
+create table etapy_wyprawy as select * from wikingowie.etapy_wyprawy;
+create table sektor as select * from wikingowie.sektor;
+create table wyprawa as select * from wikingowie.wyprawa;
+
+select distinct(nazwa) from kreatura left join uczestnicy on uczestnicy.id_uczestnika = kreatura.idKreatury
+where uczestnicy.id_wyprawy is NULL;
+
+select wyprawa.nazwa, sum(ekwipunek.ilosc) as ilosc_ekwipunku from wyprawa natural join uczestnicy
+join ekwipunek on uczestnicy.id_uczestnika = ekwipunek.idKreatury group by wyprawa.nazwa;
+
+2.
+select wyprawa.nazwa, count(uczestnicy.id_uczestnika) as liczba_uczestnikow, group_concat(kreatura.nazwa) as nazwy_uczestnikow
+from wyprawa natural join uczestnicy join kreatura on uczestnicy.id_uczestnika = kreatura.idKreatury group by wyprawa.nazwa;
+
+select sektor.nazwa as sektor, idWyprawy, dziennik from etapy_wyprawy join sektor on etapy_wyprawy.sektor = sektor.id_sektora 
+join wyprawa on etapy_wyprawy.idWyprawy = wyprawa.id_wyprawy order by wyprawa.data_rozpoczecia, idEtapu;
+
+select sektor.nazwa, count(sektor) as ilosc_odwiedzin from etapy_wyprawy right join sektor on etapy_wyprawy.sektor = sektor.id_sektora
+group by sektor;
