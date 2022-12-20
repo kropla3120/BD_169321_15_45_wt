@@ -17,5 +17,35 @@ from wyprawa natural join uczestnicy join kreatura on uczestnicy.id_uczestnika =
 select sektor.nazwa as sektor, idWyprawy, dziennik from etapy_wyprawy join sektor on etapy_wyprawy.sektor = sektor.id_sektora 
 join wyprawa on etapy_wyprawy.idWyprawy = wyprawa.id_wyprawy order by wyprawa.data_rozpoczecia, idEtapu;
 
+3.
 select sektor.nazwa, count(sektor) as ilosc_odwiedzin from etapy_wyprawy right join sektor on etapy_wyprawy.sektor = sektor.id_sektora
 group by sektor;
+
+select kreatura.nazwa,
+       case
+           when count(uczestnicy.id_wyprawy) > 0 then 'bral udzial w wyprawie'
+           else 'nie bral udzialu w wyprawie'
+       end as udział
+from kreatura left join uczestnicy on kreatura.idKreatury = uczestnicy.id_uczestnika
+group by kreatura.nazwa;
+
+4.
+select wyprawa.nazwa, sum(char_length(etapy_wyprawy.dziennik)) as suma_znakow from wyprawa
+join etapy_wyprawy on wyprawa.id_wyprawy = etapy_wyprawy.idWyprawy group by wyprawa.nazwa having suma_znakow < 400;
+
+select wyprawa.nazwa, sum(zasob.waga*ekwipunek.ilosc)/count(uczestnicy.id_uczestnika) as srednia_waga from uczestnicy 
+inner join wyprawa on uczestnicy.id_wyprawy = wyprawa.id_wyprawy 
+inner join ekwipunek on uczestnicy.id_uczestnika = ekwipunek.idKreatury 
+inner join zasob on ekwipunek.idZasobu = zasob.idZasobu 
+group by wyprawa.nazwa;
+
+5.
+select kreatura.nazwa, datediff(wyprawa.data_rozpoczecia, kreatura.dataUr) as dni, wyprawa.nazwa from wyprawa
+inner join uczestnicy on wyprawa.id_wyprawy = uczestnicy.id_wyprawy
+inner join kreatura on uczestnicy.id_uczestnika = kreatura.idKreatury
+inner join etapy_wyprawy on wyprawa.id_wyprawy = etapy_wyprawy.idWyprawy
+inner join sektor on etapy_wyprawy.sektor = sektor.id_sektora
+where sektor.nazwa = "Chatka dziadka"
+group by kreatura.nazwa, wyprawa.nazwa;
+
+
